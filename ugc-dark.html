@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UGC Calculator</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #778097;
+      --border: #dfe3eb;
+      --accent: #25324b;
+      --accent-soft: #eef1f7;
+      --warning: #9a6700;
+      --shadow: 0 12px 30px rgba(18, 28, 45, 0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .header { margin-bottom: 18px; }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.75rem, 3vw, 2.35rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-card { padding: 24px; }
+
+    .quote-card {
+      position: sticky;
+      top: 20px;
+      padding: 22px;
+    }
+
+    .base-rate {
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      margin-bottom: 24px;
+    }
+
+    .base-rate strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .section {
+      padding: 22px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .section-title {
+      font-size: 1.03rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .section-help {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 14px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: 0.15s ease;
+      background: #fff;
+    }
+
+    .option:hover {
+      border-color: #b8c0cf;
+      transform: translateY(-1px);
+    }
+
+    .option:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .option input {
+      margin-top: 3px;
+      width: 17px;
+      height: 17px;
+      accent-color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .option-title { font-weight: 650; }
+
+    .option-detail {
+      display: block;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .quote-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .quote-value {
+      font-size: 2.45rem;
+      font-weight: 800;
+      line-height: 1.05;
+      margin: 7px 0 8px;
+      letter-spacing: -0.04em;
+    }
+
+    .quote-note {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 18px;
+    }
+
+    .breakdown {
+      display: grid;
+      gap: 9px;
+      margin: 18px 0;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 0.93rem;
+    }
+
+    .breakdown-row span:first-child { color: var(--muted); }
+
+    .custom-warning {
+      display: none;
+      margin-top: 14px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      background: #fff5d6;
+      color: var(--warning);
+      font-size: 0.92rem;
+      font-weight: 650;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s ease;
+      margin-top: 18px;
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    button:hover { background: #e5e9f1; }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      resize: vertical;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 50, 75, 0.08);
+    }
+
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    @media (max-width: 820px) {
+      .page { padding: 16px; }
+      .layout { grid-template-columns: 1fr; }
+      .quote-card { position: static; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+  
+    /* Dark Notion dashboard edition */
+    :root {
+      --bg: #191919;
+      --card: #202020;
+      --text: #f1f1ef;
+      --muted: #9b9a97;
+      --border: #373737;
+      --accent: #5b8cff;
+      --accent-soft: #252d3d;
+      --success: #4ade80;
+      --warning: #f5c451;
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      --radius: 13px;
+    }
+
+    html { color-scheme: dark; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 920px;
+      padding: 20px;
+    }
+
+    .header {
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(1.45rem, 2.4vw, 1.95rem);
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+    }
+
+    .layout {
+      grid-template-columns: minmax(0, 1fr) 245px;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border-color: var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .form-card {
+      padding: 18px;
+    }
+
+    .quote-card {
+      top: 12px;
+      padding: 17px;
+    }
+
+    .base-rate {
+      padding: 13px 14px;
+      margin-bottom: 17px;
+      background: #252525;
+      border: 1px solid var(--border);
+    }
+
+    .base-rate strong {
+      font-size: 0.98rem;
+    }
+
+    .section {
+      padding: 16px 0;
+      border-color: var(--border);
+    }
+
+    .section-title {
+      font-size: 0.96rem;
+    }
+
+    .section-help {
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+    }
+
+    .options {
+      gap: 7px;
+    }
+
+    .option {
+      padding: 10px 11px;
+      gap: 9px;
+      border-color: var(--border);
+      background: #242424;
+      border-radius: 9px;
+    }
+
+    .option:hover {
+      border-color: #626262;
+      background: #292929;
+    }
+
+    .option:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      box-shadow: inset 0 0 0 1px rgba(91, 140, 255, 0.2);
+    }
+
+    .option input {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--accent);
+    }
+
+    .option-title,
+    .option > span:first-of-type {
+      font-size: 0.9rem;
+    }
+
+    .option-detail {
+      font-size: 0.79rem;
+    }
+
+    .two-col {
+      gap: 12px;
+    }
+
+    .quote-label {
+      font-size: 0.75rem;
+      color: #a9b9dc;
+    }
+
+    .quote-value {
+      font-size: 2rem;
+      color: #ffffff;
+      margin: 5px 0 6px;
+    }
+
+    .quote-note {
+      font-size: 0.8rem;
+      margin-bottom: 13px;
+    }
+
+    .breakdown {
+      gap: 7px;
+      margin: 13px 0;
+      padding-top: 13px;
+      border-color: var(--border);
+    }
+
+    .breakdown-row {
+      font-size: 0.8rem;
+      gap: 8px;
+    }
+
+    .custom-warning {
+      background: #332d1c;
+      color: var(--warning);
+      border: 1px solid #5a4b20;
+      font-size: 0.8rem;
+    }
+
+    .buttons {
+      margin-top: 13px;
+    }
+
+    button {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: #303030;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .secondary:hover {
+      background: #393939;
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 14px; }
+      .layout { grid-template-columns: minmax(0, 1fr) 220px; gap: 10px; }
+      .form-card { padding: 14px; }
+      .quote-card { padding: 14px; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .layout { grid-template-columns: 1fr; }
+      .quote-card { position: static; }
+    }
+    
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <h1>UGC Calculator</h1>
+      <p class="subtitle">Internal quote builder for Everyday Cookier UGC projects.</p>
+    </header>
+
+    <div class="layout">
+      <section class="card form-card">
+        <div class="base-rate">
+          <strong>Base package: $2,000</strong>
+          One custom cookie design, one edited vertical video, standard turnaround, one revision round, perpetual organic usage rights, and no exclusivity.
+        </div>
+
+        <form id="calculatorForm">
+          <div class="section two-col">
+            <div>
+              <div class="section-title">Number of Videos</div>
+              <div class="section-help">Choose the total number of finished videos.</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="videos" value="0" data-label="1 Video" checked /><span>1 Video<span class="option-detail">Included</span></span></label>
+                <label class="option"><input type="radio" name="videos" value="1250" data-label="2 Videos" /><span>2 Videos<span class="option-detail">+$1,250</span></span></label>
+                <label class="option"><input type="radio" name="videos" value="2250" data-label="3 Videos" /><span>3 Videos<span class="option-detail">+$2,250</span></span></label>
+                <label class="option"><input type="radio" name="videos" value="3000" data-label="4 Videos" /><span>4 Videos<span class="option-detail">+$3,000</span></span></label>
+                <label class="option"><input type="radio" name="videos" value="custom" data-label="5+ Videos" /><span>5+ Videos<span class="option-detail">Custom quote</span></span></label>
+              </div>
+            </div>
+
+            <div>
+              <div class="section-title">Project Complexity</div>
+              <div class="section-help">Choose the production level that best matches the concept.</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="complexity" value="0" data-label="Standard" checked /><span>Standard<span class="option-detail">Included</span></span></label>
+                <label class="option"><input type="radio" name="complexity" value="500" data-label="Enhanced" /><span>Enhanced<span class="option-detail">+$500</span></span></label>
+                <label class="option"><input type="radio" name="complexity" value="1000" data-label="Premium" /><span>Premium<span class="option-detail">+$1,000</span></span></label>
+                <label class="option"><input type="radio" name="complexity" value="custom" data-label="Custom Project" /><span>Custom Project<span class="option-detail">Custom quote</span></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section two-col">
+            <div>
+              <div class="section-title">Paid Advertising Rights</div>
+              <div class="section-help">Perpetual organic usage is included. Only select rights the brand wants to purchase beyond organic posting.</div>
+              <div class="options">
+                <label class="option"><input type="checkbox" name="usage" value="0.50" data-label="Paid Social Ads" /><span>Paid Social Ads<span class="option-detail">+50%</span></span></label>
+                <label class="option"><input type="checkbox" name="usage" value="0.15" data-label="Website/Email" /><span>Website/Email<span class="option-detail">+15%</span></span></label>
+                <label class="option"><input type="checkbox" name="usage" value="0.10" data-label="Amazon Listing" /><span>Amazon Listing<span class="option-detail">+10%</span></span></label>
+                <label class="option"><input type="checkbox" name="usage" value="0.30" data-label="Retail/In-Store" /><span>Retail/In-Store<span class="option-detail">+30%</span></span></label>
+                <label class="option"><input type="checkbox" name="usage" value="0.75" data-label="TV/Streaming" /><span>TV/Streaming<span class="option-detail">+75%</span></span></label>
+                <label class="option"><input type="checkbox" id="packaging" data-label="Packaging" /><span>Packaging<span class="option-detail">Custom quote</span></span></label>
+              </div>
+            </div>
+
+            <div id="durationSection" class="disabled">
+              <div class="section-title">Paid Advertising Duration</div>
+              <div class="section-help">Only applies if Paid Social Ads is selected.</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="duration" value="0" data-label="3 Months" checked /><span>3 Months<span class="option-detail">Included</span></span></label>
+                <label class="option"><input type="radio" name="duration" value="0.15" data-label="6 Months" /><span>6 Months<span class="option-detail">+15% of Paid Social fee</span></span></label>
+                <label class="option"><input type="radio" name="duration" value="0.35" data-label="12 Months" /><span>12 Months<span class="option-detail">+35% of Paid Social fee</span></span></label>
+                <label class="option"><input type="radio" name="duration" value="0.60" data-label="24 Months" /><span>24 Months<span class="option-detail">+60% of Paid Social fee</span></span></label>
+                <label class="option"><input type="radio" name="duration" value="2500" data-flat="true" data-label="Perpetual — Small / Emerging Brand" /><span>Perpetual<span class="option-detail">Small / Emerging Brand · +$2,500</span></span></label>
+                <label class="option"><input type="radio" name="duration" value="5000" data-flat="true" data-label="Perpetual — Mid-Size Brand" /><span>Perpetual<span class="option-detail">Mid-Size Brand · +$5,000</span></span></label>
+                <label class="option"><input type="radio" name="duration" value="0" data-custom="true" data-label="Perpetual — Enterprise / Fortune 500" /><span>Perpetual<span class="option-detail">Enterprise / Fortune 500 · Custom Quote</span></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section two-col">
+            <div>
+              <div class="section-title">Exclusivity</div>
+              <div class="section-help">Applied to the project subtotal after licensing.</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="exclusivity" value="0" data-label="None" checked /><span>None — Included</span></label>
+                <label class="option"><input type="radio" name="exclusivity" value="0.10" data-label="7 Days" /><span>7 Days (+10%)</span></label>
+                <label class="option"><input type="radio" name="exclusivity" value="0.15" data-label="14 Days" /><span>14 Days (+15%)</span></label>
+                <label class="option"><input type="radio" name="exclusivity" value="0.25" data-label="30 Days" /><span>30 Days (+25%)</span></label>
+                <label class="option"><input type="radio" name="exclusivity" value="0.40" data-label="60 Days" /><span>60 Days (+40%)</span></label>
+                <label class="option"><input type="radio" name="exclusivity" value="0.60" data-label="90 Days" /><span>90 Days (+60%)</span></label>
+                <label class="option"><input type="radio" name="exclusivity" value="1.00" data-label="6 Months" /><span>6 Months (+100%)</span></label>
+                <label class="option"><input type="radio" name="exclusivity" value="2.00" data-label="12 Months" /><span>12 Months (+200%)</span></label>
+              </div>
+            </div>
+
+            <div>
+              <div class="section-title">Rush Fee</div>
+              <div class="section-help">Applied after licensing and exclusivity.</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="rush" value="0" data-label="Standard Turnaround" checked /><span>Standard turnaround</span></label>
+                <label class="option"><input type="radio" name="rush" value="0.20" data-label="Under 5 Days" /><span>&lt; 5 days (+20%)</span></label>
+                <label class="option"><input type="radio" name="rush" value="0.50" data-label="Under 3 Days" /><span>&lt; 3 days (+50%)</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Additional Requirements</div>
+            <div class="options">
+              <label class="option">
+                <input type="checkbox" id="majorRevision" />
+                <span><span class="option-title">Major revisions or reshoot required</span><span class="option-detail">Custom quote</span></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Project Notes</div>
+            <div class="section-help">Optional internal notes for the quote.</div>
+            <textarea id="notes" placeholder="Brand, campaign, usage details, timing, or negotiation notes..."></textarea>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card quote-card">
+        <div class="quote-label">Recommended Rate</div>
+        <div class="quote-value" id="quoteValue">$2,000</div>
+        <div class="quote-note" id="quoteNote">Starting base package.</div>
+
+        <div class="breakdown" id="breakdown"></div>
+
+        <div class="custom-warning" id="customWarning">
+          One or more selections require a custom quote.
+        </div>
+
+        <button type="button" id="resetButton">Reset Calculator</button>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const BASE_RATE = 2000;
+
+    const form = document.getElementById("calculatorForm");
+    const usageInputs = [...document.querySelectorAll('input[name="usage"]')];
+    const paidSocialInput = usageInputs.find(input => input.dataset.label === "Paid Social Ads");
+    const durationSection = document.getElementById("durationSection");
+    const durationInputs = [...document.querySelectorAll('input[name="duration"]')];
+    const quoteValue = document.getElementById("quoteValue");
+    const quoteNote = document.getElementById("quoteNote");
+    const breakdown = document.getElementById("breakdown");
+    const customWarning = document.getElementById("customWarning");
+
+    function money(value) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function selectedRadio(name) {
+      return document.querySelector(`input[name="${name}"]:checked`);
+    }
+
+    function calculate() {
+      let productionSubtotal = BASE_RATE;
+      let customRequired = false;
+      const rows = [["Base package", money(BASE_RATE)]];
+
+      const videos = selectedRadio("videos");
+      if (videos.value === "custom") {
+        customRequired = true;
+        rows.push(["Videos", "Custom quote"]);
+      } else {
+        const videoFee = Number(videos.value);
+        productionSubtotal += videoFee;
+        rows.push(["Additional videos", videoFee ? `+${money(videoFee)}` : "Included"]);
+      }
+
+      const complexity = selectedRadio("complexity");
+      if (complexity.value === "custom") {
+        customRequired = true;
+        rows.push(["Complexity", "Custom quote"]);
+      } else {
+        const complexityFee = Number(complexity.value);
+        productionSubtotal += complexityFee;
+        rows.push(["Complexity", complexityFee ? `+${money(complexityFee)}` : "Included"]);
+      }
+
+      let subtotal = productionSubtotal;
+      const selectedUsage = usageInputs.filter(input => input.checked);
+      let usageFee = 0;
+
+      selectedUsage.forEach(input => {
+        usageFee += productionSubtotal * Number(input.value);
+      });
+
+      if (usageFee > 0) {
+        subtotal += usageFee;
+        rows.push([
+          `Usage rights (${selectedUsage.map(i => i.dataset.label).join(", ")})`,
+          `+${money(usageFee)}`
+        ]);
+      } else {
+        rows.push(["Usage rights", "Organic social included"]);
+      }
+
+      if (paidSocialInput.checked) {
+        const duration = selectedRadio("duration");
+        const paidAdBaseFee = productionSubtotal * Number(paidSocialInput.value);
+
+        if (duration.dataset.custom === "true") {
+          customRequired = true;
+          rows.push(["Paid advertising duration", "Enterprise / Fortune 500 — Custom quote"]);
+        } else if (duration.dataset.flat === "true") {
+          const durationFee = Number(duration.value);
+          subtotal += durationFee;
+          rows.push(["Paid advertising duration", `+${money(durationFee)}`]);
+        } else {
+          const durationFee = paidAdBaseFee * Number(duration.value);
+
+          if (durationFee > 0) {
+            subtotal += durationFee;
+            rows.push(["Paid advertising duration", `+${money(durationFee)}`]);
+          } else {
+            rows.push(["Paid advertising duration", "3 months included"]);
+          }
+        }
+      }
+
+      if (document.getElementById("packaging").checked) {
+        customRequired = true;
+        rows.push(["Packaging usage", "Custom quote"]);
+      }
+
+      const exclusivity = selectedRadio("exclusivity");
+      const exclusivityRate = Number(exclusivity.value);
+      if (exclusivityRate > 0) {
+        const exclusivityFee = subtotal * exclusivityRate;
+        subtotal += exclusivityFee;
+        rows.push(["Exclusivity", `+${money(exclusivityFee)}`]);
+      } else {
+        rows.push(["Exclusivity", "Included"]);
+      }
+
+      const rush = selectedRadio("rush");
+      const rushRate = Number(rush.value);
+      if (rushRate > 0) {
+        const rushFee = subtotal * rushRate;
+        subtotal += rushFee;
+        rows.push(["Rush fee", `+${money(rushFee)}`]);
+      } else {
+        rows.push(["Rush fee", "Included"]);
+      }
+
+      if (document.getElementById("majorRevision").checked) {
+        customRequired = true;
+        rows.push(["Major revisions/reshoot", "Custom quote"]);
+      }
+
+      quoteValue.textContent = customRequired ? `${money(subtotal)}+` : money(subtotal);
+      quoteNote.textContent = customRequired
+        ? "Calculated minimum before custom-quote items."
+        : "Internal recommended project rate.";
+
+      breakdown.innerHTML = rows
+        .map(([label, value]) => `<div class="breakdown-row"><span>${label}</span><strong>${value}</strong></div>`)
+        .join("");
+
+      customWarning.style.display = customRequired ? "block" : "none";
+    }
+
+    function updateDurationState() {
+      const enabled = paidSocialInput.checked;
+      durationSection.classList.toggle("disabled", !enabled);
+      durationInputs.forEach(input => input.disabled = !enabled);
+
+      if (!enabled) {
+        durationInputs.forEach(input => input.checked = input.value === "0");
+      }
+    }
+
+    paidSocialInput.addEventListener("change", () => {
+      updateDurationState();
+      calculate();
+    });
+
+    form.addEventListener("input", calculate);
+    form.addEventListener("change", calculate);
+
+    document.getElementById("resetButton").addEventListener("click", () => {
+      form.reset();
+      updateDurationState();
+      calculate();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    updateDurationState();
+    calculate();
+  </script>
+</body>
+</html>

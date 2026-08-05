@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Everyday Cookier UGC Calculator</title>
+  <style>
+    :root{
+      --bg:#191919;
+      --panel:#202020;
+      --panel2:#262626;
+      --border:#3a3a3a;
+      --text:#f3f3f1;
+      --muted:#a5a5a0;
+      --accent:#6f92ff;
+      --accentSoft:#27324f;
+      --warn:#f3c969;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html{color-scheme:dark}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.45
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:20px}
+    h1{margin:0 0 6px;font-size:clamp(1.6rem,3vw,2.1rem)}
+    .sub{margin:0 0 16px;color:var(--muted);font-size:.9rem}
+    .grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;align-items:start}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius)}
+    .form{padding:18px}
+    .quote{padding:18px;position:sticky;top:12px}
+    .base{
+      background:var(--panel2);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:13px 14px;
+      color:var(--muted);
+      font-size:.84rem;
+      margin-bottom:16px
+    }
+    .base strong{display:block;color:var(--text);font-size:1rem;margin-bottom:4px}
+    .section{padding:16px 0;border-top:1px solid var(--border)}
+    .section:first-of-type{border-top:0;padding-top:0}
+    .section h2{font-size:1rem;margin:0 0 3px}
+    .help{color:var(--muted);font-size:.8rem;margin-bottom:10px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .opts{display:grid;gap:8px}
+    label.opt{
+      display:flex;gap:9px;align-items:flex-start;
+      padding:10px 11px;
+      background:var(--panel2);
+      border:1px solid var(--border);
+      border-radius:9px;
+      cursor:pointer;
+      transition:.15s ease
+    }
+    label.opt:hover{border-color:#656565}
+    label.opt:has(input:checked){border-color:var(--accent);background:var(--accentSoft)}
+    input[type="radio"],input[type="checkbox"]{margin-top:3px;accent-color:var(--accent)}
+    .otitle{font-size:.9rem;font-weight:700}
+    .odetail{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+    .disabled{opacity:.45;pointer-events:none}
+    .qlabel{color:#b5c3e7;font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+    .qvalue{font-size:2.1rem;font-weight:850;letter-spacing:-.04em;margin:5px 0}
+    .qnote{font-size:.8rem;color:var(--muted)}
+    .breakdown{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:grid;gap:8px}
+    .row{display:flex;justify-content:space-between;gap:10px;font-size:.8rem}
+    .row span:first-child{color:var(--muted)}
+    .warning{
+      display:none;
+      margin-top:12px;
+      padding:10px;
+      border-radius:9px;
+      border:1px solid #5b4b22;
+      background:#332c19;
+      color:var(--warn);
+      font-size:.8rem;
+      font-weight:700
+    }
+    button{
+      width:100%;
+      margin-top:14px;
+      padding:10px 12px;
+      background:#303030;
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-weight:750;
+      cursor:pointer
+    }
+    button:hover{background:#3a3a3a}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.quote{position:static}.two{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>UGC Brand Deal Pricing Calculator</h1>
+    <p class="sub">Internal quote builder for Everyday Cookier UGC projects.</p>
+
+    <div class="grid">
+      <section class="card form">
+        <div class="base">
+          <strong>Base package: $2,500</strong>
+          Includes one basic custom cookie design, one edited vertical video, perpetual organic social usage, standard turnaround, and one revision round.
+        </div>
+
+        <form id="calc">
+          <div class="section two">
+            <div>
+              <h2>Cookie Designs</h2>
+              <div class="help">Choose the total number of cookie designs.</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="cookies" value="0" checked><span><span class="otitle">1 Cookie</span><span class="odetail">Included</span></span></label>
+                <label class="opt"><input type="radio" name="cookies" value="150"><span><span class="otitle">2 Cookies</span><span class="odetail">+$150</span></span></label>
+                <label class="opt"><input type="radio" name="cookies" value="500"><span><span class="otitle">3 Cookies</span><span class="odetail">+$500</span></span></label>
+                <label class="opt"><input type="radio" name="cookies" value="750"><span><span class="otitle">4 Cookies</span><span class="odetail">+$750</span></span></label>
+                <label class="opt"><input type="radio" name="cookies" value="custom"><span><span class="otitle">5+ Cookies</span><span class="odetail">Custom quote</span></span></label>
+              </div>
+            </div>
+
+            <div>
+              <h2>Artistic Complexity</h2>
+              <div class="help">Rate the project by the most difficult cookie design.</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="complexity" value="0" checked><span><span class="otitle">Basic</span><span class="odetail">Included</span></span></label>
+                <label class="opt"><input type="radio" name="complexity" value="250"><span><span class="otitle">Medium</span><span class="odetail">+$250</span></span></label>
+                <label class="opt"><input type="radio" name="complexity" value="750"><span><span class="otitle">Premium</span><span class="odetail">+$750</span></span></label>
+                <label class="opt"><input type="radio" name="complexity" value="1000"><span><span class="otitle">Extreme</span><span class="odetail">+$1,000</span></span></label>
+                <label class="opt"><input type="radio" name="complexity" value="custom"><span><span class="otitle">Custom Project</span><span class="odetail">Custom quote</span></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>Edited Videos</h2>
+            <div class="help">Choose the total number of finished edited videos.</div>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="videos" value="0" checked><span><span class="otitle">1 Video</span><span class="odetail">Included</span></span></label>
+              <label class="opt"><input type="radio" name="videos" value="500"><span><span class="otitle">2 Videos</span><span class="odetail">+$500</span></span></label>
+              <label class="opt"><input type="radio" name="videos" value="1000"><span><span class="otitle">3 Videos</span><span class="odetail">+$1,000</span></span></label>
+              <label class="opt"><input type="radio" name="videos" value="1500"><span><span class="otitle">4 Videos</span><span class="odetail">+$1,500</span></span></label>
+              <label class="opt"><input type="radio" name="videos" value="custom"><span><span class="otitle">5+ Videos</span><span class="odetail">Custom quote</span></span></label>
+            </div>
+          </div>
+
+          <div class="section two">
+            <div>
+              <h2>Usage Rights</h2>
+              <div class="help">Perpetual organic social usage is included. Select all additional uses.</div>
+              <div class="opts">
+                <label class="opt"><input type="checkbox" name="usage" value="0.50" data-label="Paid Social Ads"><span><span class="otitle">Paid Social Ads</span><span class="odetail">+50%</span></span></label>
+                <label class="opt"><input type="checkbox" name="usage" value="0.05" data-label="Email Marketing"><span><span class="otitle">Email Marketing</span><span class="odetail">+5%</span></span></label>
+                <label class="opt"><input type="checkbox" name="usage" value="0.15" data-label="Website"><span><span class="otitle">Website</span><span class="odetail">+15%</span></span></label>
+                <label class="opt"><input type="checkbox" name="usage" value="0.10" data-label="Amazon / Product Listings"><span><span class="otitle">Amazon / Product Listings</span><span class="odetail">+10%</span></span></label>
+                <label class="opt"><input type="checkbox" name="usage" value="0.30" data-label="Retail / In-Store"><span><span class="otitle">Retail / In-Store</span><span class="odetail">+30%</span></span></label>
+                <label class="opt"><input type="checkbox" name="usage" value="0.75" data-label="TV / Streaming"><span><span class="otitle">TV / Streaming</span><span class="odetail">+75%</span></span></label>
+              </div>
+            </div>
+
+            <div id="durationBox" class="disabled">
+              <h2>Paid Ad Duration</h2>
+              <div class="help">Only applies if Paid Social Ads is selected.</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="duration" value="0" checked><span><span class="otitle">3 Months</span><span class="odetail">Included with paid-ad fee</span></span></label>
+                <label class="opt"><input type="radio" name="duration" value="0.15"><span><span class="otitle">6 Months</span><span class="odetail">+15% of paid-ad fee</span></span></label>
+                <label class="opt"><input type="radio" name="duration" value="0.35"><span><span class="otitle">12 Months</span><span class="odetail">+35% of paid-ad fee</span></span></label>
+                <label class="opt"><input type="radio" name="duration" value="0.60"><span><span class="otitle">24 Months</span><span class="odetail">+60% of paid-ad fee</span></span></label>
+                <label class="opt"><input type="radio" name="duration" value="2500" data-flat="1"><span><span class="otitle">Perpetual</span><span class="odetail">Small brand · +$2,500</span></span></label>
+                <label class="opt"><input type="radio" name="duration" value="5000" data-flat="1"><span><span class="otitle">Perpetual</span><span class="odetail">Mid-size brand · +$5,000</span></span></label>
+                <label class="opt"><input type="radio" name="duration" value="custom"><span><span class="otitle">Perpetual</span><span class="odetail">Fortune 500 / Enterprise · Custom quote</span></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section two">
+            <div>
+              <h2>Category Exclusivity</h2>
+              <div class="help">Applied after production and usage fees.</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="exclusivity" value="0" checked><span>None — Included</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="0.10"><span>7 Days (+10%)</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="0.15"><span>14 Days (+15%)</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="0.25"><span>30 Days (+25%)</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="0.40"><span>60 Days (+40%)</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="0.60"><span>90 Days (+60%)</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="1.00"><span>6 Months (+100%)</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="2.00"><span>12 Months (+200%)</span></label>
+                <label class="opt"><input type="radio" name="exclusivity" value="custom"><span>12+ Months — Custom quote</span></label>
+              </div>
+            </div>
+
+            <div>
+              <h2>Rush Fee</h2>
+              <div class="help">Applied after licensing and exclusivity.</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="rush" value="0" checked><span>Standard turnaround</span></label>
+                <label class="opt"><input type="radio" name="rush" value="0.20"><span>&lt; 5 days (+20%)</span></label>
+                <label class="opt"><input type="radio" name="rush" value="0.50"><span>&lt; 3 days (+50%)</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>Additional Requirements</h2>
+            <div class="opts">
+              <label class="opt"><input type="checkbox" id="reshoot"><span><span class="otitle">Major revisions or reshoot required</span><span class="odetail">Custom quote</span></span></label>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card quote">
+        <div class="qlabel">Recommended Rate</div>
+        <div class="qvalue" id="total">$2,500</div>
+        <div class="qnote" id="note">Internal recommended project rate.</div>
+        <div class="breakdown" id="breakdown"></div>
+        <div class="warning" id="warning">One or more selections require a custom quote.</div>
+        <button type="button" id="reset">Reset Calculator</button>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const BASE = 2500;
+    const form = document.getElementById("calc");
+    const totalEl = document.getElementById("total");
+    const noteEl = document.getElementById("note");
+    const breakdownEl = document.getElementById("breakdown");
+    const warningEl = document.getElementById("warning");
+    const paidAds = [...document.querySelectorAll('input[name="usage"]')].find(x => x.dataset.label === "Paid Social Ads");
+    const durationBox = document.getElementById("durationBox");
+
+    const money = n => new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(n);
+    const radio = name => document.querySelector(`input[name="${name}"]:checked`);
+
+    function updateDuration(){
+      const on = paidAds.checked;
+      durationBox.classList.toggle("disabled", !on);
+      document.querySelectorAll('input[name="duration"]').forEach(x => x.disabled = !on);
+      if(!on){
+        document.querySelector('input[name="duration"][value="0"]').checked = true;
+      }
+    }
+
+    function calc(){
+      let subtotal = BASE;
+      let production = BASE;
+      let custom = false;
+      const rows = [["Base package", money(BASE)]];
+
+      for(const [name,label] of [["cookies","Cookie count"],["complexity","Complexity"],["videos","Edited videos"]]){
+        const sel = radio(name);
+        if(sel.value === "custom"){
+          custom = true;
+          rows.push([label,"Custom quote"]);
+        }else{
+          const fee = Number(sel.value);
+          subtotal += fee;
+          production += fee;
+          rows.push([label, fee ? `+${money(fee)}` : "Included"]);
+        }
+      }
+
+      const usage = [...document.querySelectorAll('input[name="usage"]:checked')];
+      let usageFee = 0;
+      usage.forEach(x => usageFee += production * Number(x.value));
+      subtotal += usageFee;
+
+      if(usage.length){
+        rows.push([`Usage rights (${usage.map(x=>x.dataset.label).join(", ")})`,`+${money(usageFee)}`]);
+      }else{
+        rows.push(["Usage rights","Organic social included"]);
+      }
+
+      if(paidAds.checked){
+        const d = radio("duration");
+        const paidBase = production * 0.50;
+        if(d.value === "custom"){
+          custom = true;
+          rows.push(["Paid ad duration","Custom quote"]);
+        }else if(d.dataset.flat){
+          const fee = Number(d.value);
+          subtotal += fee;
+          rows.push(["Paid ad duration",`+${money(fee)}`]);
+        }else{
+          const fee = paidBase * Number(d.value);
+          subtotal += fee;
+          rows.push(["Paid ad duration", fee ? `+${money(fee)}` : "3 months included"]);
+        }
+      }
+
+      const ex = radio("exclusivity");
+      if(ex.value === "custom"){
+        custom = true;
+        rows.push(["Exclusivity","Custom quote"]);
+      }else{
+        const rate = Number(ex.value);
+        if(rate){
+          const fee = subtotal * rate;
+          subtotal += fee;
+          rows.push(["Exclusivity",`+${money(fee)}`]);
+        }else{
+          rows.push(["Exclusivity","Included"]);
+        }
+      }
+
+      const rush = Number(radio("rush").value);
+      if(rush){
+        const fee = subtotal * rush;
+        subtotal += fee;
+        rows.push(["Rush fee",`+${money(fee)}`]);
+      }else{
+        rows.push(["Rush fee","Included"]);
+      }
+
+      if(document.getElementById("reshoot").checked){
+        custom = true;
+        rows.push(["Major revisions / reshoot","Custom quote"]);
+      }
+
+      totalEl.textContent = custom ? `${money(subtotal)}+` : money(subtotal);
+      noteEl.textContent = custom ? "Calculated minimum before custom-quote items." : "Internal recommended project rate.";
+      warningEl.style.display = custom ? "block" : "none";
+      breakdownEl.innerHTML = rows.map(([a,b]) => `<div class="row"><span>${a}</span><strong>${b}</strong></div>`).join("");
+    }
+
+    form.addEventListener("change",()=>{updateDuration();calc()});
+    document.getElementById("reset").addEventListener("click",()=>{
+      form.reset();
+      updateDuration();
+      calc();
+      window.scrollTo({top:0,behavior:"smooth"});
+    });
+
+    updateDuration();
+    calc();
+  </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Everyday Cookier Tools</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #191919;
+      color: #f3f3f1;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #a5a5a0;
+      margin-bottom: 30px;
+    }
+
+    .links {
+      display: grid;
+      gap: 16px;
+    }
+
+    a {
+      display: block;
+      padding: 18px;
+      background: #262626;
+      color: #ffffff;
+      text-decoration: none;
+      border: 1px solid #3a3a3a;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    a:hover {
+      background: #27324f;
+      border-color: #6f92ff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Everyday Cookier Tools</h1>
+    <p>Select a pricing calculator.</p>
+
+    <div class="links">
+      <a href="sponsorship_calculator_updated.html">
+        Sponsorship Calculator
+      </a>
+
+      <a href="ugc_calculator_updated.html">
+        UGC Calculator
+      </a>
+    </div>
+  </div>
+</body>
+</html>
